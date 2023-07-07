@@ -1,0 +1,39 @@
+{% extends "./main.html" %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
+{%- from "moj/components/header/macro.njk" import mojHeader -%}
+{% from "../components/navbar/macro.njk" import navbar %}
+
+{% block header %}
+
+
+{{ mojHeader({
+	organisationLabel: {
+	  text: 'GOV.UK',
+	  href: '#'
+	},
+	serviceLabel: {
+	  text: 'Civil Service Learning',
+	  href: '#'
+	},
+	navigation: {
+	  label: 'Account navigation',
+	  items: [{
+		text: 'Jamie Lovell',
+		href: '#',
+		active: true
+	  }, {
+		text: 'Sign out',
+		href: '#'
+	  }]
+	}
+  
+  }) }}
+  {{ govukPhaseBanner({
+	tag: {
+	text: "beta"
+	},
+	classes: "govuk-width-container",
+	html: 'Your <a class="govuk-link" href="#">feedback</a> will help us to improve.'
+	}) }}
+{% endblock %}

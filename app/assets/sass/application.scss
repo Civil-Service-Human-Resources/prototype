@@ -1,6 +1,274 @@
 //
 // For guidance on how to add CSS and SCSS see:
 // https://prototype-kit.service.gov.uk/docs/adding-css-javascript-and-images
-// 
+//
+
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+input,
+textarea,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  font-weight: normal;
+}
+
+@import "variables";
 
 // Add extra styles here
+@import "../../../node_modules/govuk-frontend/govuk/settings/measurements";
+@import "../../../node_modules/govuk-frontend/govuk/base";
+@import "header";
+@import "utils";
+@import "expander";
+@import "tags";
+
+%site-width-container {
+  max-width: $govuk-page-width;
+
+  margin: 0 $govuk-gutter-half;
+
+  @include govuk-media-query($govuk-page-width + $govuk-gutter-half * 2) {
+    margin: 0 auto;
+  }
+}
+
+.phase-banner {
+  @extend %site-width-container;
+  @extend %contain-floats;
+}
+
+.phase-banner__content {
+  word-break: normal;
+}
+.push-top {
+  margin-top: 50px;
+}
+
+.push-bottom {
+  margin-bottom: 30px;
+  display: block;
+
+  &.notice {
+    margin-top: 30px;
+  }
+}
+
+.view-all {
+  @include e(button) {
+    display: none;
+  }
+  .showing {
+    display: none;
+  }
+  @include m(showing) {
+    .hidden {
+      display: none;
+    }
+    .showing {
+      display: inline;
+    }
+  }
+}
+
+.js-enabled {
+  .js-hidden {
+    display: none;
+  }
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+}
+.bottom-main {
+  padding-bottom: 400px;
+}
+
+@media (min-width: 641px) {
+  main {
+    font-size: 19px;
+    line-height: 1.31579;
+  }
+  .bottom-main {
+    padding-bottom: 320px;
+  }
+}
+
+body:not(.js-enabled) {
+  .js-only {
+    * {
+      display: none;
+    }
+  }
+}
+
+.form-group .panel-border-narrow {
+  float: initial !important;
+}
+
+.font-weight-regular {
+  font-weight: normal;
+}
+
+.govuk-fieldset__legend--s {
+  margin-bottom: 20px;
+}
+
+.vertical-center {
+  margin: 0;
+  padding-top: 15px;
+  position: absolute;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.summary-page .date-and-time-container .vertical-center {
+  margin: 0;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.summary-page .date-and-time-container {
+  display: inline-block;
+  width: 25%;
+}
+
+.summary-page .date-and-time-value-container{
+  display: inline-block;
+  width: 60%;
+}
+
+@media only screen and (max-width: 700px) {
+  .summary-page .date-and-time-value-container{
+    text-align: right;
+  }
+}.width-10 {
+   max-width: 23ex;
+ }
+
+.chose-date .time-header {
+  margin-left: 48%;
+}
+
+.chose-date .date-value {
+  width: 50%;
+  display: inline-block;
+}
+
+.no-margin-bottom.discite__property-item {
+  margin-bottom: 0;
+}
+
+.govuk-header__container {
+  position: relative;
+  margin-bottom: -10px;
+  padding-top: 10px;
+  border-bottom: 10px solid #af292e;
+}

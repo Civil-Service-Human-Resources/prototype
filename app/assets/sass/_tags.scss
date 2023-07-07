@@ -1,0 +1,22 @@
+.tag-container {
+  /*   padding: 8px 5px 0 8px; */
+  /*   background: lightgrey; */
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 16px;
+}
+
+.tag {
+  font-family: "GDS Transport", arial, sans-serif;
+  background: #1d70b8;
+  color: white;
+  padding: 5px;
+  /*   border: 1px black solid; */
+  border-radius: 10px;
+  margin: 0 5px 8px 0;
+}
+
+.tag__accent {
+  font-weight: 700;
+}
