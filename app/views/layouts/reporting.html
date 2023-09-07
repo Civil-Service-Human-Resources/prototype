@@ -1,25 +1,6 @@
 {% extends "layouts/csl_layout.html" %}
-{% from "components/navbar/macro.njk" import navbar %}
+{% from "components/mojNavbar/macro.njk" import mojNavbar %}
 {% block header %}
 {{super()}}
-{{navbar("Reporting")}}
-  {{ mojSubNavigation({
-	label: 'Sub navigation',
-	classes: "govuk-width-container govuk-!-margin-bottom-1",
-	items: [
-	{
-	  text: 'Completed learning',
-	  href: '#1',
-	  active: true
-	},
-	{
-		text: 'Course insigts',
-		href: '#1'
-	  },
-	  {
-		text: 'Registered users',
-		href: '#1'
-	  }
-	]
-  }) }}
+{{mojNavbar("Reporting")}}
 {% endblock %}

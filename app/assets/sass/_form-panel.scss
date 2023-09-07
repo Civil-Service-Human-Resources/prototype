@@ -1,0 +1,27 @@
+.form-panel {
+	background-color: #f3f2f1;
+	// border: 1px solid #b1b4b6;
+	// padding: 0 1rem;
+	@include govuk-responsive-margin(3, "bottom");
+	@include govuk-responsive-padding(3, "all");
+	// @include govuk-responsive-padding(3, "right");
+	// @include govuk-responsive-padding(3, "top");
+	// @include govuk-responsive-padding(1, "bottom");
+}
+
+.form-panel__section {
+	border-bottom: 1px black solid;
+}
+
+.scrollable {
+	overflow-y: scroll;
+	max-height: 20rem;
+}
+
+// .tag {
+// 	position: relative;
+// }
+
+// .tag--filled {
+// 	background-color: #c4c8cd;
+// }

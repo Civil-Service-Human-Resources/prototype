@@ -1,0 +1,441 @@
+{% extends "../layouts/completed-learning.html" %}
+
+{% block beforeContent %}
+{{super()}}
+<!-- {{navbar("reporting", true, true)}} -->
+<script src="/public/javascripts/datePicker.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+{% if admin %}
+	{{ govukBackLink({
+		text: "Back",
+		href: "/reporting/completed-learning/select-organisation"
+	}) }}
+{% endif %}
+{% endblock %}
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-m">Reporting</span>
+        <h1 class="govuk-heading-l">Completed learning</h1>
+    </div>
+</div>
+{% macro datePicker(label, hint, text) %}
+	{% set labelId %}{{label | replace(' ', '_') | lower | trim }}{% endset %}
+	<div data-module="ds-datepicker" class="ds_datepicker">
+		<label class="ds_label" for="{{labelId}}">{{label}}</label>
+		<p class="ds_hint-text">{{hint}}</p>
+
+		<div class="ds_input__wrapper">
+		<input name="{{labelId}}" id="{{labelId}}" type="text" class="ds_input  ds_input--fixed-10" {% if text %}value="{{text}}"{% endif %} />
+		</div>
+	</div>
+{% endmacro %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+		<form method="post">
+			{% for tag in coursePanel['tags'] %}
+			<input type="hidden" name="{{tag['formName']}}" id="{{tag['formName']}}-{{tag['formValue']}}" value="{{tag['formValue']}}">
+			{% endfor %}
+			<input type="hidden" name="{{coursePanel['parentForm']}}" value="{{coursePanel['parentFormValue']}}">
+		{% set whenHtml %}
+            {% set customRadio %}
+			{{datePicker("Start Date", "Use dd/mm/yyyy format. For example, 31/01/2023.", startDate)}}
+			{{datePicker("End Date", "Use dd/mm/yyyy format. For example, 31/01/2023.", endDate)}}
+            {% endset -%}
+            {{ govukRadios({
+                classes: "govuk-radios--small",
+                name: "date-range",
+                items: [
+                    {
+                        value: "today",
+                        text: "Today",
+                        checked: dateRange == "today" or dateRange == null
+                    },
+                    {
+                        value: "past-seven-days",
+                        text: "Past seven days",
+						checked: dateRange == "past-seven-days"
+                    },
+                    {
+                        value: "past-month",
+                        text: "Past month",
+						checked: dateRange == "past-month"
+                    },
+                    {
+                        value: "past-year",
+                        text: "Past year",
+						checked: dateRange == "past-year"
+                    },
+                    {
+                        value: "custom",
+                        text: "Custom",
+						checked: dateRange == 'custom',
+                        conditional: {
+                            html: customRadio
+                        }
+                    }
+                ]
+            }) }}
+        {% endset -%}
+		        {% set depHtml %}
+            {{ govukCheckboxes({
+                name: "include-subdepartments",
+                classes: "govuk-checkboxes--small",
+                items: [
+                    {
+                        value: "include-subdepts",
+                        text: "Include sub-departments",
+						checked: includeSubdepartments !== undefined and includeSubdepartments !== "_unchecked"
+                    }
+                ]
+            }) }}
+        {% endset -%}
+		{% set requiredLearningHtml %}
+				{{ govukCheckboxes({
+					name: "mandatory-learning",
+					classes: "govuk-checkboxes--small",
+					items: [
+						{
+							value: "required-learning",
+							text: "Required learning",
+							checked: mandatoryLearnings["required-learning"]
+						},
+						{
+							value: "non-required-learning",
+							text: "Non-required learning",
+							checked: mandatoryLearnings["non-required-learning"]
+						}
+					]
+				}) }}
+        {% endset -%}
+        {% set gradeHtml %}
+				{{ govukCheckboxes({
+					name: "grade",
+					classes: "govuk-checkboxes--small",
+					items: 
+					[
+						{"value":"administrative-assistant", "text": "Administrative assistant",
+						 "checked": grades['administrative-assistant']},
+						{"value":"administrative-officer", "text": "Administrative officer",
+						 "checked": grades['administrative-officer']},
+						{"value":"executive-officer", "text": "Executive officer",
+						 "checked": grades['executive-officer']},
+						{"value":"grade-6", "text": "Grade 6",
+						 "checked": grades['grade-6']},
+						{"value":"grade-7", "text": "Grade 7",
+						 "checked": grades['grade-7']},
+						{"value":"higher-executive-officer", "text": "Higher executive officer",
+						 "checked": grades['higher-executive-officer']},
+						{"value":"scs-deputy-director", "text": "SCS: deputy director",
+						 "checked": grades['scs-deputy-director']},
+						{"value":"scs-director", "text": "SCS: director",
+						 "checked": grades['scs-director']},
+						{"value":"scs-director-general", "text": "SCS: director general",
+						 "checked": grades['scs-director-general']},
+						{"value":"scs-permanent-secretary", "text": "SCS: permanent secretary",
+						 "checked": grades['scs-permanent-secretary']},
+						{"value":"senior-executive-officer", "text": "Senior executive officer",
+						 "checked": grades['senior-executive-officer']}
+					]
+				}) }}
+		{% endset -%}
+        {% set professionHtml %}
+				{{ govukCheckboxes({
+					name: "profession",
+					classes: "govuk-checkboxes--small pane",
+					items: 
+
+[{"value":"analysis",
+"checked": professions["analysis"],
+"text": "Analysis"},
+{"value":"commercial",
+"checked": professions["commercial"],
+"text": "Commercial"},
+{"value":"communications",
+"checked": professions["communications"],
+"text": "Communications"},
+{"value":"corporate-finance",
+"checked": professions["corporate-finance"],
+"text": "Corporate finance"},
+{"value":"counter-fraud",
+"checked": professions["counter-fraud"],
+"text": "Counter fraud"},
+{"value":"digital-data-and-technology",
+"checked": professions["digital-data-and-technology"],
+"text": "Digital, data and technology"},
+{"value":"economics",
+"checked": professions["economics"],
+"text": "Economics"},
+{"value":"finance",
+"checked": professions["finance"],
+"text": "Finance"},
+{"value":"fraud-error-debts-and-grants",
+"checked": professions["fraud-error-debts-and-grants"],
+"text": "Fraud, error, debts and grants"},
+{"value":"human-resources",
+"checked": professions["human-resources"],
+"text": "Human resources"},
+{"value":"intelligence-analysis",
+"checked": professions["intelligence-analysis"],
+"text": "Intelligence analysis"},
+{"value":"internal-audit",
+"checked": professions["internal-audit"],
+"text": "Internal audit"},
+{"value":"international-trade",
+"checked": professions["international-trade"],
+"text": "International trade"},
+{"value":"knowledge-and-information-management",
+"checked": professions["knowledge-and-information-management"],
+"text": "Knowledge and information management"},
+{"value":"legal",
+"checked": professions["legal"],
+"text": "Legal"},
+{"value":"medical",
+"checked": professions["medical"],
+"text": "Medical"},
+{"value":"occupational-psychology",
+"checked": professions["occupational-psychology"],
+"text": "Occupational psychology"},
+{"value":"operational-delivery",
+"checked": professions["operational-delivery"],
+"text": "Operational delivery"},
+{"value":"operational-research",
+"checked": professions["operational-research"],
+"text": "Operational research"},
+{"value":"planning",
+"checked": professions["planning"],
+"text": "Planning"},
+{"value":"planning-inspection",
+"checked": professions["planning-inspection"],
+"text": "Planning inspection"},
+{"value":"policy",
+"checked": professions["policy"],
+"text": "Policy"},
+{"value":"project-delivery",
+"checked": professions["project-delivery"],
+"text": "Project delivery"},
+{"value":"property",
+"checked": professions["property"],
+"text": "Property"},
+{"value":"science-and-engineering",
+"checked": professions["science-and-engineering"],
+"text": "Science and engineering"},
+{"value":"security",
+"checked": professions["security"],
+"text": "Security"},
+{"value":"social-research",
+"checked": professions["social-research"],
+"text": "Social research"},
+{"value":"statistics",
+"checked": professions["statistics"],
+"text": "Statistics"},
+{"value":"tax",
+"checked": professions["tax"],
+"text": "Tax"},
+{"value":"veterinary",
+"checked": professions["veterinary"],
+"text": "Veterinary"}]
+
+				}) }}
+			{% endset -%}
+		<h2 class="govuk-heading-m">
+			Filter {{custom}}
+		</h2>
+		{{ govukButton({
+			element: "input",
+			text: "Apply filters"
+		}) }}
+		<!-- <div class="form-panel">
+			<h3 class="govuk-heading-s">Date range</h3>
+			{{ whenHtml | safe}}
+		</div> -->
+		<div class="app-c-expander" data-module="expander" data-open-on-load="false">
+			<h3 class="app-c-expander__heading">
+				<span class="app-c-expander__title js-toggle">Date</span>
+				<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="app-c-expander__icon app-c-expander__icon--up" aria-hidden="true" focusable="false"><path d="m798.16 609.84l-256-256c-16.683-16.683-43.691-16.683-60.331 0l-256 256c-16.683 16.683-16.683 43.691 0 60.331s43.691 16.683 60.331 0l225.84-225.84 225.84 225.84c16.683 16.683 43.691 16.683 60.331 0s16.683-43.691 0-60.331z"></path></svg>
+				<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="app-c-expander__icon app-c-expander__icon--down" aria-hidden="true" focusable="false"><path d="m225.84 414.16l256 256c16.683 16.683 43.691 16.683 60.331 0l256-256c16.683-16.683 16.683-43.691 0-60.331s-43.691-16.683-60.331 0l-225.84 225.84-225.84-225.84c-16.683-16.683-43.691-16.683-60.331 0s-16.683 43.691 0 60.331z"></path></svg>
+			</h3>
+			<div class="app-c-expander__content js-content" id="expander-content">
+				{{ whenHtml | safe}}
+			</div>
+		</div>
+		<div class="app-c-expander" data-module="expander" data-open-on-load="false">
+			<h3 class="app-c-expander__heading">
+				<span class="app-c-expander__title js-toggle">Departments</span>
+				<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="app-c-expander__icon app-c-expander__icon--up" aria-hidden="true" focusable="false"><path d="m798.16 609.84l-256-256c-16.683-16.683-43.691-16.683-60.331 0l-256 256c-16.683 16.683-16.683 43.691 0 60.331s43.691 16.683 60.331 0l225.84-225.84 225.84 225.84c16.683 16.683 43.691 16.683 60.331 0s16.683-43.691 0-60.331z"></path></svg>
+				<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="app-c-expander__icon app-c-expander__icon--down" aria-hidden="true" focusable="false"><path d="m225.84 414.16l256 256c16.683 16.683 43.691 16.683 60.331 0l256-256c16.683-16.683 16.683-43.691 0-60.331s-43.691-16.683-60.331 0l-225.84 225.84-225.84-225.84c-16.683-16.683-43.691-16.683-60.331 0s-16.683 43.691 0 60.331z"></path></svg>
+			</h3>
+			<div class="app-c-expander__content js-content" id="expander-content-f71d93d0">
+				{{ depHtml | safe }}
+			</div>
+		</div>
+		<div class="app-c-expander" data-module="expander" data-open-on-load="false">
+			<h3 class="app-c-expander__heading">
+				<span class="app-c-expander__title js-toggle">Grade</span>
+				<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="app-c-expander__icon app-c-expander__icon--up" aria-hidden="true" focusable="false"><path d="m798.16 609.84l-256-256c-16.683-16.683-43.691-16.683-60.331 0l-256 256c-16.683 16.683-16.683 43.691 0 60.331s43.691 16.683 60.331 0l225.84-225.84 225.84 225.84c16.683 16.683 43.691 16.683 60.331 0s16.683-43.691 0-60.331z"></path></svg>
+				<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="app-c-expander__icon app-c-expander__icon--down" aria-hidden="true" focusable="false"><path d="m225.84 414.16l256 256c16.683 16.683 43.691 16.683 60.331 0l256-256c16.683-16.683 16.683-43.691 0-60.331s-43.691-16.683-60.331 0l-225.84 225.84-225.84-225.84c-16.683-16.683-43.691-16.683-60.331 0s-16.683 43.691 0 60.331z"></path></svg>
+			</h3>
+			<div class="app-c-expander__content js-content scrollable" id="expander-content-f71d93c1">
+				{{ gradeHtml | safe }}
+			</div>
+		</div>
+		<div class="app-c-expander govuk-!-margin-bottom-6" data-module="expander" data-open-on-load="false">
+			<h3 class="app-c-expander__heading">
+				<span class="app-c-expander__title js-toggle">Profession</span>
+				<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="app-c-expander__icon app-c-expander__icon--up" aria-hidden="true" focusable="false"><path d="m798.16 609.84l-256-256c-16.683-16.683-43.691-16.683-60.331 0l-256 256c-16.683 16.683-16.683 43.691 0 60.331s43.691 16.683 60.331 0l225.84-225.84 225.84 225.84c16.683 16.683 43.691 16.683 60.331 0s16.683-43.691 0-60.331z"></path></svg>
+				<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="app-c-expander__icon app-c-expander__icon--down" aria-hidden="true" focusable="false"><path d="m225.84 414.16l256 256c16.683 16.683 43.691 16.683 60.331 0l256-256c16.683-16.683 16.683-43.691 0-60.331s-43.691-16.683-60.331 0l-225.84 225.84-225.84-225.84c-16.683-16.683-43.691-16.683-60.331 0s-16.683 43.691 0 60.331z"></path></svg>
+			</h3>
+			<div class="app-c-expander__content js-content scrollable" id="expander-content-f71d93c2">
+				{{ professionHtml | safe }}
+			</div>
+		</div>
+	</form>
+    </div>
+	{% macro renderTags(tags) %}
+		{% for tag in tags %}
+			{{renderTag(tag)}}
+		{% endfor %}
+	{% endmacro %}
+	{% macro renderTag(tag) %}
+		<input type="hidden" name="{{tag['formName']}}" id="{{tag['formName']}}-{{tag['formValue']}}" value="{{tag['formValue']}}">
+		{% if tag["preText"] %}
+			<span class="tag__pretext">{{tag["preText"]}}</span>
+		{% endif %}
+		<div class="tag"><span>{{ tag["tagText"] }}</span>{% if tag["dismissable"] %}<button formaction="/reporting/completed-learning?remove={{tag['formName']}},{{tag['formValue']}}" type="submit" class="tag__dismiss">X</button>{% endif %}</div>
+	{% endmacro %}
+	{% macro tagPanel(text, panel, changeableLink=null) %}
+		{% if panel['tags'].length > 0 %}
+		<div class="tag-panel">
+				{% if panel['parentForm'] %}
+					<input type="hidden" name="{{panel['parentForm']}}" value="{{panel['parentFormValue']}}">
+				{% endif %}
+				<div class="tags__tags">
+					<span class="tag__text">{{ text }}</span>
+					{{renderTags(panel['tags'])}}
+				</div>
+				{% if changeableLink %}
+					<a href="{{changeableLink}}">Change</a>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endmacro %}
+    <div class="govuk-grid-column-two-thirds">
+		<div class="tag-container">
+			<form method="post" action="/reporting/completed-learning">
+				<div class="tags">
+					{{tagPanel("Reporting on", reportingOnPanel)}}
+					{{tagPanel("Courses", coursePanel, '/reporting/completed-learning/choose-courses')}}
+					{{tagPanel("When", dateTagPanel)}}
+					{{tagPanel("Grade", gradePanel)}}
+					{{tagPanel("Profession", profPanel)}}
+				</div>
+			</form>
+		</div>
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-full">
+				<div class="form-panel">
+					<h2 class="govuk-heading-s">Total number of completions</h2>
+					<p class="govuk-body-s">Total number of times the selected courses have been completed for the given time period.</p>
+					<p class="govuk-body-l govuk-!-margin-bottom-0">{{total}}</p>
+				</div>
+			</div>
+		</div>
+        {% set chartHtml %}
+            <h2 class="govuk-heading-s">Chart</h2>
+            <div class="govuk-!-padding-bottom-8">
+                <canvas id="myChart"></canvas>
+            </div>
+            {{ govukButton({
+                text: "Download chart data (.csv)"
+            }) }}
+        {% endset -%}
+        {% set tableHtml %}
+            <h2 class="govuk-heading-s">Table</h2>
+			<div class="moj-scrollable-pane">
+				{{ govukTable({
+					firstCellIsHeader: true,
+					caption: "Number of completions",
+  					captionClasses: "govuk-table__caption--s",
+					head: chartHeadings,
+					rows: chartRows
+				}) }}
+			</div>
+        {% endset -%}
+        {{ govukTabs({
+            items: [
+                {
+                    label: "Chart",
+                    id: "chart",
+                    panel: {
+                        html: chartHtml
+                    }
+                },
+                {
+                    label: "Table",
+                    id: "table",
+                    panel: {
+                        html: tableHtml
+                    }
+                }
+            ]
+        }) }}
+        <h2 class="govuk-heading-m">About this chart</h2>
+        <p class="govuk-body">This chart displays the number of courses that have been completed by learners on the Civil Service Learning platform.</p>
+        {% if admin %}
+			<p class="govuk-body">
+				<a href="#">Download source data</a>
+			</p>
+		{% endif %}
+		<script id="Xaxis" type="json">{{Xaxis|dump|safe}}</script>
+		<script id="chartData" type="json">{{chartData|dump|safe}}</script>
+		<input type="hidden" id="XaxisUnit" value="{{XaxisUnit}}"/>
+		<input type="hidden" id="tooltipFormat" value="{{tooltipFormat}}"/>
+        <script>
+            const ctx = document.getElementById('myChart');
+			const axis = JSON.parse(document.getElementById('Xaxis').innerHTML)
+			const data = JSON.parse(document.getElementById('chartData').innerHTML)
+			const XaxisUnit = document.getElementById('XaxisUnit').getAttribute("value")
+			const tooltipFormat = document.getElementById('tooltipFormat').getAttribute("value")
+			console.log(XaxisUnit)
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: axis,
+                    datasets: [{
+                        label: '# of courses completed',
+                        data,
+                        borderWidth: 1
+                    }],
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+							ticks: {
+								precision: 0
+							}
+                        },
+						x: {
+							type: 'time',
+							time: {
+								unit: XaxisUnit,
+								tooltipFormat: tooltipFormat
+							},
+							ticks: {
+								source: 'labels'
+							}
+						},
+                    },
+					
+                }
+            });
+        </script>
+    </div>
+</div>
+{% endblock %}
+{% block pageScripts %}
+    <script src="/public/javascripts/expander.js"></script>
+{% endblock %}

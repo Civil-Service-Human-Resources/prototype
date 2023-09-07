@@ -1,0 +1,44 @@
+{%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
+
+{%- macro mojNavbar(currentPage) %}
+{{ mojPrimaryNavigation({
+  label: 'Primary navigation',
+  items: [
+        {
+            text: "Home",
+            href: "/home",
+			active: currentPage == "Home"
+        },
+        {
+            text: "Suggestions for you",
+            href: "/home"
+        },
+        {
+            text: "Learning record",
+            href: "/home"
+        },
+        {
+            text: "Profile",
+            href: "/profile"
+        },
+        {
+            text: "Skills",
+            href: "/home"
+        },
+        {
+            text: "Admin",
+            href: "/admin"
+        },
+        {
+            text: "Reporting",
+            href: "/reporting/completed-learning/choose-courses",
+			active: currentPage == "Reporting"
+        },
+        {
+            text: "Sign out",
+            href: "/sign-out"
+        }
+  ]
+}) }}
+	
+{% endmacro %}

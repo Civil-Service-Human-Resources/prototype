@@ -1,40 +1,24 @@
 {%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
-{% macro link(active, name, href) %}
-    <li class="{% if active %}active{% endif %}"><a href="{{ href }}">{{ name }}</a></li>
+
+{% macro link(href, name, selected) %}
+	<li {% if selected %}class="active"{% endif %}><a  href="{{href}}">{{name}}</a></li>
 {% endmacro %}
 
-
 {%- macro navbar(currentPage) %}
-{{ mojPrimaryNavigation({
-  label: 'Primary navigation',
-  items: [
-        {
-            text: "Home",
-            href: "/home",
-			active: currentPage == "Home"
-        },
-        {
-            text: "Suggestions for you",
-            href: "/home"
-        },
-        {
-            text: "Learning record",
-            href: "/home"
-        },
-        {
-            text: "Skills",
-            href: "/home"
-        },
-        {
-            text: "Admin",
-            href: "/admin"
-        },
-        {
-            text: "Reporting",
-            href: "/reporting",
-			active: currentPage == "Reporting"
-        }
-  ]
-}) }}
-	
+<div class="nav-container with-proposition">
+    <div class="govuk-width-container">
+		<nav id="proposition-menu">
+			<ul id="proposition-links">
+				{{link("/home", "Home", currentPage == "Home")}}
+				{{link("#", "Suggestions for you", currentPage == "Suggestions for you")}}
+				{{link("#", "Learning record", currentPage == "Learning record")}}
+				{{link("#", "Profile", currentPage == "Profile")}}
+				{{link("#", "Skills", currentPage == "Skills")}}
+				{{link("#/", "Admin", currentPage == "Admin")}}
+				{{link("/reporting/completed-learning/choose-courses", "Reporting", currentPage == "Reporting")}}
+				{{link("/sign-out", "Sign out", currentPage == "Sign out")}}
+			</ul>
+		</nav>
+	</div>
+</div>
 {% endmacro %}

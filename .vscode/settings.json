@@ -1,0 +1,8 @@
+{
+	"appService.zipIgnorePattern": [
+		"node_modules{,/**}",
+		".vscode{,/**}"
+	],
+	"appService.defaultWebAppToDeploy": "/subscriptions/3d841a15-ecbe-4132-8fa9-9cde2de0c52e/resourceGroups/rg-csl-prototype/providers/Microsoft.Web/sites/csl-prototype",
+	"appService.deploySubpath": "."
+}

@@ -1,0 +1,6 @@
+{% extends "layouts/reporting.html" %}
+{% from "components/reporting-sub-navbar/macro.njk" import subnnavbar %}
+{% block header %}
+{{super()}}
+{{ subnnavbar("Completed Learning") }}
+{% endblock %}

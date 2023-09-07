@@ -5,6 +5,8 @@
 {% from "../components/navbar/macro.njk" import navbar %}
 
 {% block header %}
+
+
 {{ mojHeader({
 	organisationLabel: {
 	  text: 'GOV.UK',
@@ -13,14 +15,24 @@
 	serviceLabel: {
 	  text: 'Civil Service Learning',
 	  href: '#'
+	},
+	navigation: {
+	  label: 'Account navigation',
+	  items: [{
+		text: 'Jamie Lovell',
+		href: '#'
+	  }, {
+		text: 'Sign out',
+		href: '#'
+	  }]
 	}
   
   }) }}
   {{ govukPhaseBanner({
 	tag: {
-	text: "prototype"
+	text: "beta"
 	},
 	classes: "govuk-width-container",
-	html: 'This is a prototype of new functionality'
+	html: 'Your <a class="govuk-link" href="#">feedback</a> will help us to improve.'
 	}) }}
 {% endblock %}

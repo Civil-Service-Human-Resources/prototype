@@ -7,7 +7,12 @@
   "dependencies": {
     "@govuk-prototype-kit/common-templates": "^1.1.1",
     "@ministryofjustice/frontend": "^1.8.0",
+    "accessible-autocomplete": "^2.0.4",
+    "dayjs": "^1.11.9",
     "govuk-frontend": "^4.5.0",
     "govuk-prototype-kit": "^13.6.0"
+  },
+  "devDependencies": {
+    "@scottish-government/pattern-library": "^0.0.355"
   }
 }

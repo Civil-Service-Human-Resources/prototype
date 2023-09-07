@@ -1,0 +1,69 @@
+{% extends "../layouts/completed-learning.html" %}
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-m">Reporting</span>
+        <h1 class="govuk-heading-l">Completed learning</h1>
+		<form method="post" action="/reporting/completed-learning">
+			{% set requiredHtml %}
+				{{ govukCheckboxes({
+					name: "required-learning",
+					classes: "govuk-checkboxes--small",
+					fieldset: {
+					legend: {
+						text: "Required learning"
+					}
+					},
+					items: required
+				}) }}
+			{% endset -%}
+			{% set nonRequiredHtml %}
+				<label class="govuk-label" for="non-required-learning">Non-requried learning</label>
+				<div id="subject-hint" class="govuk-hint">
+					Start typing to filter available courses
+				</div>
+				<select class="govuk-select" name="non-required-learning" id="non-required-learning" multiple="true">
+					{% for option in nonRequired %}
+						<option value="{{option['value']}}">{{option['text']}}</option>
+					{% endfor %}
+				</select>
+			{% endset -%}
+			{{ govukRadios({
+				name: "learning",
+				fieldset: {
+				legend: {
+					text: "What courses would you like to report on?",
+					classes: "govuk-fieldset__legend--s"
+				}
+				},
+				items: [
+				{
+					value: "required-learning",
+					text: "Required learning for Cabinet Office",
+					conditional: {
+					html: requiredHtml
+					},
+					checked: true
+				},
+				{
+					value: "non-required-learning",
+					text: "Non-required learning",
+					conditional: {
+					html: nonRequiredHtml
+					}
+				},
+				{
+					value: "all-learning",
+					text: "All learning"
+				}
+				]
+			}) }}
+			{{ govukButton({
+				text: "Continue"
+			}) }}
+		</form>
+	</div>
+</div>
+<script type="text/javascript" src="/public/javascripts/accessible-autocomplete.min.js"></script>
+<script type="text/javascript" src="/public/javascripts/autocomplete.js"></script>
+{% endblock %}

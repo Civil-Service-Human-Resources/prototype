@@ -1,0 +1,31 @@
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+
+{%- macro subnnavbar(currentPage) %}
+  {{ mojSubNavigation({
+	label: 'Sub navigation',
+	classes: "govuk-width-container govuk-!-margin-bottom-1",
+	items: [
+	{
+	  text: 'Completed learning',
+	  href: '/reporting/completed-learning/choose-courses',
+	  active: currentPage == "Completed Learning"
+	}
+	]
+  }) }}
+{% endmacro %}
+
+	{# {
+		text: 'Course insigts',
+		href: '/reporting/course-insights',
+		active: currentPage == "Course Insights"
+	  },
+	  {
+		text: 'Booking',
+		href: '/reporting/booking',
+		active: currentPage == "Booking"
+	  }
+	  {
+		text: 'Registered users',
+		href: '/reporting/registered-users',
+		active: currentPage == "Registered Users"
+	  } #}

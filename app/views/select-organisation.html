@@ -1,0 +1,40 @@
+{% extends "layouts/completed-learning.html" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+		<span class="govuk-caption-m">Reporting</span>
+        <h1 class="govuk-heading-l">Select Organisation</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+		<form method="post">
+			<label class="govuk-label" for="org-autocomplete">Select organisations</label>
+			<div id="org-autocomplete-container"></div>
+			<!-- <div id="orgs">
+				{{ govukCheckboxes({
+					name: "organisation",
+					classes: "govuk-checkboxes--small",
+					items: [
+						{
+							value: "co",
+							text: "Cabinet Office"
+						},
+						{
+							value: "hmrc",
+							text: "HMRC"
+						},
+						{
+							value: "DEFRA",
+							text: "Department for Environment, Food and Rural Affairs"
+						}
+					]
+				}) }}
+			</div> -->
+		</form>
+    </div>
+</div>
+<script type="text/javascript" src="/public/javascripts/accessible-autocomplete.min.js"></script>
+<script type="text/javascript" src="/public/javascripts/autocomplete.js"></script>
+{% endblock %}
